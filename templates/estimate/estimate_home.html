@@ -1,0 +1,220 @@
+{% extends "_base.html" %}
+{% load staticfiles %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/apps/apps_home.css' %}">
+<link rel="stylesheet" href="{% static 'css/base/tooltip.css' %}">
+{% endblock %}
+
+{% block title %}Estimates{% endblock %}
+
+{% block breadcrumb_content %}
+<ol class="breadcrumb">
+    {% if perms.customers.is_superuser  %}
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+    {% else %}
+      <li class="breadcrumb-item">Home</li>
+    {% endif %}
+    <li class="breadcrumb-item"><a active href="#">Estimate</a></li>
+</ol>
+{% endblock %}
+
+{% block content %}
+{% include "_modal.html" %}
+
+<div class="content-container">
+
+  <div class="option-list">
+    <div class="option-left">
+      <a href="#" id="filter"><img src="{% static 'images/filter.png' %}" alt=""></a>
+      <div class="filter-group">
+        <div class="filter-container">
+
+          <div class="filter-div">
+            <label for="">Customer: </label>
+            <select name="" id="customer_list" class="form-control">
+              <option value="" selected></option>
+              {% for customer in customer_list %}
+                <option value={{customer}}>{{customer}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="filter-div">
+            <label for="">Status: </label>
+            <select name="" id="status_list" class="form-control">
+              <option value="" selected></option>
+              {% for status in status_list %}
+                <option value={{status}}>{{status}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="filter-div">
+            <label for="">From: </label>
+            <input class="form-control"  type="text" id="min">
+          </div>
+
+          <div class="filter-div">
+            <label for="">To: </label>
+            <input class="form-control" type="text" id="max">
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="option-right">
+      <div class="btn-group">
+        {% if estimates %}
+        {% if perms.estimates.delete_estimate  or perms.estimates.export_estimate %}
+        <button type="button" class="crud actions"><img src="{% static 'images/action.png' %}" class="mr-2">Actions</button>
+        <button type="button" class="crud actions dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {% endif %}
+        {% endif %}
+        <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu">
+          <form action="" method="POST" id="batch_action">
+            {% if perms.estimates.delete_estimate  %}
+            <a class="dropdown-item mb-2 batch_delete" href="#"><img src="{% static 'images/batch_delete.png' %}" class="mr-2">Delete Selected</a>
+            {% endif %}
+            {% if perms.estimates.export_estimate  %}
+            <a class="dropdown-item mb-2 batch_export" href="#"><img src="{% static 'images/batch_export.png' %}" class="mr-2">Export Selected</a>
+            {% endif %}
+          </form>
+        </div>
+      </div>
+      {% if perms.estimates.add_estimate  %}
+      <a class="crud add-item" href="{% url 'estimate-create' %}"><img src="{% static 'images/add-estimate.png' %}" class="mr-2">Add Estimate</a>
+      {% endif %}
+      {% if estimates %}
+      {% if perms.estimates.export_estimate  %}
+      <a class="crud export-all" href="{% url 'estimate-export' %}"><img src="{% static 'images/excel.png' %}" class="mr-2">Export All</a>
+      {% endif %}
+      {% if perms.estimates.delete_estimate  %}
+      <a class="crud delete-all" href="{% url 'estimate-delete-all' %}"><img src="{% static 'images/delete-all.png' %}" class="mr-2">Delete All</a>
+      {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <form action="" id="frm-table" method="post">
+  <table id="myTable" class="order-column table table-bordered">
+    <thead>
+      <tr>
+        <th><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
+        <th class="sort">Estimate Number</th>
+        <th class="sort">Project Name</th>
+        <th class="sort">Customer</th>
+        <th class="sort">Investment</th>
+        <th class="sort">Profit</th>
+        <th class="sort">Status</th>
+        <th class="sort">Date Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for estimate in estimates %}
+      <tr class="mydata-row">
+        <td class="input-td" id="customer-id" value={{estimate.pk}}>{{estimate.pk}}</td>
+        <td>
+          <div class="tooltips">
+            <a class="estimate-link" href="{% url 'estimate-read' estimate.pk %}">{{ estimate.estimateNumber }}</a>
+            <div class="top"><p>See more details</p><i></i></div>
+          </div>
+        </td>
+        <td>{{ estimate.projectName }}</td>
+        <td>{{ estimate.customer }}</td>
+        <td class="investment">{{ estimate.overallInvestment }}</td>
+        <td class="profit">{{ estimate.overallProfit }}</td>
+        <td>{{ estimate.status }}</td>
+        <td>{{ estimate.created_at |date:'m/d/Y'}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </form>
+  {% if perms.estimates.change_estimate or perms.estimates.delete_estimate%}
+  <ul class='custom-menu'>
+    {% if perms.estimates.change_estimate  %}
+    <li><a class="menu-update"><img src="{% static 'images/edit.png' %}" class="mr-2" alt="">Update</a></li>
+    {% endif %}
+    {% if perms.estimates.delete_estimate %}
+    <li><a class="menu-delete"><img src="{% static 'images/delete.png' %}" class="mr-3" alt="">Delete</a></li>
+    {% endif %}
+    <li><a class="menu-duplicate"><img src="{% static 'images/duplicate.png' %}" class="mr-3" alt="">Duplicate</a></li>
+  </ul>
+  {% endif %}
+
+</div>
+{% endblock content %}
+
+{% block javascript %}
+<script type="text/javascript" src="{% static 'dataTables/datatables.min.js' %}"></script>
+<script src="{% static 'assets/js/dataTables.checkboxes.js' %}" charset="utf-8"></script>
+<script src="{% static 'js/apps/modalview.js' %}" charset="utf-8"></script>
+<script src="{% static 'js/apps/rightclick_menu.js' %}" charset="utf-8"></script>
+<script src="{% static 'js/apps/date_range.js' %}" charset="utf-8"></script>
+<script src="{% static 'js/apps/loadTable.js' %}" charset="utf-8"></script>
+<!-- THIS IS FOR BATCH FUNCTION BUTTONS -->
+<script>
+  var selected_items;
+  $(document).ready(function() {
+
+    $('a#filter').on("click", function(){
+      if ($('.filter-group').is(":visible")){
+        $('.filter-group').hide();
+      }
+      else{
+        $('.filter-group').show();
+      }
+    });
+
+    $("a.batch_export").on("click", function() {
+      getSelectedItems();
+      if(selected_items == ""){
+        alert("Please select an item first.")
+      }
+      else{
+        var url = "{% url 'estimate-export_batch' 'test' %}";
+        url = url.replace('test', selected_items);
+        $(this).attr("href", url);
+      }
+    });
+
+    $("a.batch_delete").on("click", function() {
+      getSelectedItems();
+      if(selected_items == ""){
+        alert("Please select an item first.")
+      }
+      else{
+        var url = "{% url 'estimate-delete-batch' 'test' %}";
+        url = url.replace('test', selected_items);
+        $(this).attr("href", url);
+      }
+    });
+
+    $("a.menu-delete").on("click", function() {
+      var url1 = "{% url 'estimate-delete-batch' 'test' %}";
+      url1 = url1.replace('test', id);
+      $(this).attr("href", url1);
+    });
+
+    $("a.menu-update").on("click", function() {
+      var url = "{% url 'estimate-update' 'test' %}";
+      url = url.replace('test', id);
+      $(this).attr("href", url);
+    });
+
+    $("a.menu-duplicate").on("click", function() {
+      var url = "{% url 'estimate-duplicate' 'test' %}";
+      url = url.replace('test', id);
+      $(this).attr("href", url);
+    });
+  });
+</script>
+
+<script>
+
+</script>
+
+{% endblock %}

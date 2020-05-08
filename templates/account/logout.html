@@ -1,0 +1,37 @@
+{% extends "_base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block extrahead %}
+  <link rel="stylesheet" href="{% static 'css/base/button.css' %}">
+  <link rel="stylesheet" href="{% static 'css/accounts/logout.css' %}">
+
+  <link rel="stylesheet" href="{% static 'css/base/message.css' %}">
+{% endblock extrahead %}
+
+{% block content %}
+
+<div class="content-container">
+  <div class="form-container">
+    <h3>Log Out</h3>
+    <p>Are you sure you want to log out now?</p>
+    <form method="post">
+      {% csrf_token %}
+      {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+      {% endif %}
+      <!-- <button type="submit">Log Out</button> -->
+      <button type="submit" class="button"><span>Logout</span></button>
+    </form>
+  </div>
+</div>
+
+{% endblock content %}
+{% block javascript %}
+<script>
+  $(".popup-message").fadeTo(2000, 500).slideUp(500, function(){
+    $(".popup-message").slideUp(500);
+  });
+</script>
+{% endblock javascript %}

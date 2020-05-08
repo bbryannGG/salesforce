@@ -1,0 +1,88 @@
+{% load widget_tweaks %}
+{% load staticfiles %}
+<div class="modal-header">
+  <div class="modal-title">
+    <img src="{% static 'images/supplier-read.png' %}" class="mr-3">
+    <div class="company-detail">
+      <p><span class="read-name">{{ distributors.distributorName }}</span> <span class="read-email">{{ distributors.email }}</span></p>
+     </div>
+  </div>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  {% if distributors %}
+  <div class="modal-dual">
+    <div>
+      <span class="title">Contact Person</span>
+      <span class="data">{{ distributors.contactPerson }}</span>
+    </div>
+
+    <div>
+      <span class="title">Phone</span>
+      <span class="data">{{ distributors.phone }}</span>
+    </div>
+  </div>
+
+
+  <div class="modal-dual">
+    <div>
+      <span class="title">Contact Person 2</span>
+      <span class="data">{{ distributors.contactPerson2 }}</span>
+    </div>
+
+    <div>
+      <span class="title">Phone 2</span>
+      <span class="data">{{ distributors.phone2 }}</span>
+    </div>
+  </div>
+
+  <div class="modal-single">
+    <div>
+      <span class="title">Address</span>
+      <span class="data">{{ distributors.addressLine1 }} {{ distributors.addressLine2 }} {{ distributors.city }} {{ distributors.postalCode }} {{ distributors.country }}</span>
+    </div>
+  </div>
+
+  <div class="modal-single">
+    <div>
+      <span class="title">Website</span>
+      <span class="data">{{ distributors.website }}</span>
+    </div>
+  </div>
+
+  <div class="modal-single">
+    <div>
+      <span class="title">Additional Information</span>
+      <span class="data">{{ distributors.additionalInfo }}</span>
+    </div>
+  </div>
+
+  <div class="modal-dual">
+    <div>
+      <span class="title">Date Updated</span>
+      <span class="data">{{ distributors.last_updated_at }}</span>
+    </div>
+
+    <div>
+      <span class="title">Updated By</span>
+      <span class="data">{{ distributors.last_updated_by }}</span>
+    </div>
+  </div>
+
+  <div class="modal-dual">
+    <div>
+      <span class="title">Date Added</span>
+      <span class="data">{{ distributors.created_at }}</span>
+    </div>
+
+    <div>
+      <span class="title">Added By</span>
+      <span class="data">{{ distributors.created_by }}</span>
+    </div>
+  </div>
+</div>
+
+{% endif %}

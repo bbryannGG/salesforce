@@ -1,0 +1,31 @@
+.content-container{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+.form-container{
+  background-color: white;
+  padding: 30px;
+  border: 1px solid rgba(50,50,50,0.2);
+  color: rgba(74, 70, 70, 1);
+  box-sizing: border-box;
+  box-shadow: 1px 1px 10px rgba(50,50,50, 0.3);
+  max-width: 50%;
+  min-width: 400px;
+}
+h3{
+  font-weight: 700;
+}
+
+p{
+  padding: 10px 0px;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+  border-top: 1px solid rgba(0,0,0,0.2);
+}
+.button{
+  width: 100%;
+  background-color: #D3424E;
+}
+.button span:after {
+  content: '\02717';
+}

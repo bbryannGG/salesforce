@@ -1,0 +1,135 @@
+.content-container{
+  width: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+}
+div.top-dashboard{
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.3);
+  padding: 20px;
+}
+
+div.topleft-dashboard, div.topright-dashboard{
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  max-width: 250px;
+}
+div.topleft-dashboard p{
+  width: 80px;
+}
+div.topright-dashboard p{
+  width: 140px;
+}
+div.border-here{
+  border: 3px solid rgba(74, 141, 181, 0.6);
+}
+span.data{
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 5px;
+}
+span.title{
+  display: block;
+}
+
+div.single-widget{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+div.single-widget p{
+  margin-left: 10px;
+}
+div.total-products, div.cancelled-transaction{
+  border:none;
+}
+
+div.profit-chart{
+  width: 600px;
+  padding: 0 20px;
+  margin: 0 10px;
+  border-right: 1px solid rgba(74, 141, 181, 0.4);
+  border-left: 1px solid rgba(74, 141, 181, 0.4);
+}
+select#year-data{
+  padding: 5px 10px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+div.profit-head{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+/* BOTTOM DASHBOARD */
+
+div.bottom-dashboard{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+div.bottom-menu{
+  flex: 2;
+  margin: 0 10px;
+  padding: 20px;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.3);
+}
+
+div.total-profit{
+  display: flex;
+  flex-direction: column;
+}
+div.date-range{
+  margin: 5px 0;
+}
+div.date-range label{
+  width: 80px;
+}
+div.date-range input{
+  padding: 5px;
+  box-shadow: none;
+}
+h1.profit-data{
+  text-align: center;
+  /* background-color: #189853; */
+  background-color: rgba(74, 141, 181, 1);
+  color:white;
+  padding: 10px;
+}
+div#invalid-date{
+  display: none;
+  background-color: #D33F49;
+  color: white;
+  padding: 10px;
+  border-radius:5px;
+  margin-top: 5px;
+}
+div.list-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+div.list-container td{
+  border: 1px solid rgba(200,200,200,0.8);
+}
+td{
+  max-width: 270px;
+  padding: 10px;
+}
+td.product-sold{
+  max-width: 90px;
+}
+div.recent-transaction{
+  display: none;
+}
+
+@media screen and (min-width: 1600px) {
+  div.recent-transaction{
+    display: block;
+  }
+}

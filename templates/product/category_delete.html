@@ -1,0 +1,12 @@
+{% extends "product/category_form.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% block content %}
+<form method = 'POST' action= '' enctype = "multipart/form-data" novalidate id = "category-form">{% csrf_token %}
+	<h4>Delete the category?</h4>
+	<ul>
+		<li class=" mt-2"><span class="mr-2">&cross;</span>{{ categoryname }}</li>
+	</ul>
+	<button type="submit" name="button" class="button button-delete"><span>Confirm Delete</span></button>
+</form>
+{% endblock %}

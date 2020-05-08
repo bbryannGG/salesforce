@@ -1,0 +1,12 @@
+.content-container{
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+  box-shadow: 1px 1px 10px rgba(50,50,50, 0.3);
+  padding: 30px;
+  background-color: white;
+}
+div.category-field a{
+  cursor:pointer;
+  margin: 0 5px;
+}

@@ -1,0 +1,166 @@
+{% extends "_base.html" %}
+{% load staticfiles %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/apps/apps_home.css' %}">
+<link rel="stylesheet" href="{% static 'css/base/tooltip.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/dataTables.checkboxes.css' %}">
+
+{% endblock %}
+
+{% block title %}Customers - AvantGarde Technologies{% endblock %}
+{% block page_title %}Customers{% endblock %}
+{% block breadcrumb_content %}
+<ol class="breadcrumb">
+    {% if perms.customers.is_superuser  %}
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+    {% else %}
+      <li class="breadcrumb-item">Home</li>
+    {% endif %}
+    <li class="breadcrumb-item"><a active href="#">Customer</a></li>
+</ol>
+{% endblock %}
+{% block content %}
+{% include "_modal.html" %}
+<div class="content-container">
+  <div class="option-list">
+    <div class="option-left">
+
+    </div>
+    <div class="option-right">
+      <div class="btn-group">
+        {% if customers %}
+        {% if perms.customers.delete_customer  or perms.customers.export_customer %}
+        <button type="button" class="crud actions"><img src="{% static 'images/action.png' %}" class="mr-2">Actions</button>
+        <button type="button" class="crud actions dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {% endif %}
+        {% endif %}
+        <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu">
+          <form action="" method="POST" id="batch_action">
+            {% if perms.customers.delete_customer  %}
+            <a class="dropdown-item mb-2 batch_delete" href="#"><img src="{% static 'images/batch_delete.png' %}" class="mr-2">Delete Selected</a>
+            {% endif %}
+            {% if perms.customers.export_customer  %}
+            <a class="dropdown-item mb-2 batch_export" href="#"><img src="{% static 'images/batch_export.png' %}" class="mr-2">Export Selected</a>
+            {% endif %}
+          </form>
+        </div>
+      </div>
+
+      {% if perms.customers.add_customer  %}
+      <a class="crud add-item" href="{% url 'customer-create' %}"><img src="{% static 'images/add-customer.png' %}" class="mr-2">Add Customer</a>
+      {% endif %}
+      {% if customers %}
+      {% if perms.customers.export_customer  %}
+      <a class="crud export-all" href="{% url 'customer-export' %}"><img src="{% static 'images/excel.png' %}" class="mr-2">Export All</a>
+      {% endif %}
+      {% if perms.customers.delete_customer  %}
+      <a class="crud delete-all" href="{% url 'customer-delete-all' %}"><img src="{% static 'images/delete-all.png' %}" class="mr-2">Delete All</a>
+      {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <form action="" id="frm-table" method="post">
+  <table id="myTable" class="order-column table table-bordered">
+    <thead>
+      <tr>
+        <th><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
+        <th class="sort">Company Name</th>
+        <th class="sort">Email</th>
+        <th class="sort">Phone</th>
+        <th class="sort">Contact Person</th>
+        <th class="sort">Address</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for customer in customers %}
+      <tr class="mydata-row">
+        <td class="input-td" id="customer-id" value="{{customer.pk}}">{{customer.pk}}</td>
+        <td>
+          <div class="tooltips">
+            <button type="button" class="button-plain read-data" data-id="{% url 'customer-read' customer.pk %}">
+              {{ customer.companyName }}
+            </button>
+            <div class="top"><p>See more details</p><i></i></div>
+          </div>
+        </td>
+        <td>{{ customer.email }}</td>
+        <td>{{ customer.phone }}</td>
+        <td>{{ customer.contactPerson }}</td>
+        <td>{{ customer.addressLine1 }} {{ customer.addressLine2 }} {{ customer.city }} {{ customer.country }}, {{ customer.postalCode }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </form>
+  {% if perms.customers.change_customer or perms.customers.delete_customer%}
+  <ul class='custom-menu'>
+    {% if perms.customers.change_customer  %}
+    <li><a class="menu-update"><img src="{% static 'images/edit.png' %}" class="mr-2" alt="">Update</a></li>
+    {% endif %}
+    {% if perms.customers.delete_customer %}
+    <li><a class="menu-delete"><img src="{% static 'images/delete.png' %}" class="mr-3" alt="">Delete</a></li>
+    {% endif %}
+  </ul>
+  {% endif %}
+</div>
+{% endblock content %}
+
+{% block javascript %}
+<script type="text/javascript" src="{% static 'dataTables/datatables.min.js' %}"></script>
+<script src="{% static 'assets/js/dataTables.checkboxes.js' %}" charset="utf-8"></script>
+<!-- YUNG SA DROPDOWN NA PAGE SELECTOR -->
+<!-- <script type="text/javascript" src="{% static 'js/apps/select.js' %}"></script> -->
+<script src="{% static 'js/apps/modalview.js' %}" charset="utf-8"></script>
+<script src="{% static 'js/apps/rightclick_menu.js' %}" charset="utf-8"></script>
+<script src="{% static 'js/apps/loadTable.js' %}" charset="utf-8"></script>
+<script>
+  var selected_items;
+  $(document).ready(function() {
+
+    // BATCH EXPORT
+     $("a.batch_export").on("click", function() {
+       getSelectedItems();
+       if(selected_items == ""){
+         alert("Please select an item first.")
+       }
+       else{
+         var url = "{% url 'customer-export_batch' 'test' %}";
+         url = url.replace('test', selected_items);
+         $(this).attr("href", url);
+       }
+     });
+
+    // BATCH DELETE
+     $("a.batch_delete").on("click", function() {
+       getSelectedItems();
+       if(selected_items == ""){
+         alert("Please select an item first.")
+       }
+       else{
+         var url = "{% url 'customer-delete-batch' 'test' %}";
+         url = url.replace('test', selected_items);
+         $(this).attr("href", url);
+       }
+     });
+
+     // UPDATE ITEM
+     $("a.menu-update").on("click", function() {
+       var url = "{% url 'customer-update' 'test' %}";
+       url = url.replace('test', id);
+       $(this).attr("href", url);
+     });
+
+     // DELETE ITEM
+     $("a.menu-delete").on("click", function() {
+       var url1 = "{% url 'customer-delete-batch' 'test' %}";
+       url1 = url1.replace('test', id);
+       $(this).attr("href", url1);
+     });
+  });
+</script>
+
+{% endblock %}

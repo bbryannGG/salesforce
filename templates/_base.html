@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <title>{% block title %}AvantGarde Technologies - Salesforce Management System{% endblock title %}</title>
+
+  <link rel="stylesheet" href="{% static 'css/base/css-reset.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/jquery-ui.theme.css' %}">
+  <link rel="stylesheet" href="{% static 'assets/css/jquery-ui.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/button.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base/_base.css' %}">
+
+  <!-- DATA TABLES -->
+  <link rel="stylesheet" href="{% static 'dataTables/datatables.css' %}">
+  <link rel="stylesheet" href="{% static 'dataTables/semantic.min.css' %}">
+
+  {% block extrahead %}
+  {% endblock extrahead %}
+
+</head>
+
+<body>
+  <div id="container">
+    <nav class="breadcrumb-nav" aria-label="breadcrumb">
+      {% block breadcrumb_content %}
+      {% endblock %}
+    </nav>
+    <div class="main-header" id="header">
+      <div class="company-name">
+        <p>AvantGarde Technologies</p>
+      </div>
+      <div class="navigation-tabs">
+        {% if perms.customers.is_superuser  %}
+        <a class="navbutton" href="{% url 'home' %}">DASHBOARD</a>
+        {% else %}
+        {% endif %}
+        {% if perms.customers.view_customer  %}
+        <a class="navbutton" href="{% url 'customer-home' %}">CUSTOMERS</a>
+        {% endif %}
+        {% if perms.distributors.view_distributor  %}
+        <a class="navbutton" active href="{% url 'distributor-home' %}">DISTRIBUTORS</a>
+        {% endif %}
+        {% if perms.products.view_product  %}
+        <a class="navbutton" href="{% url 'product-home' %}">PRODUCTS</a>
+        {% endif %}
+        {% if perms.estimates.view_estimate %}
+        <a class="navbutton" href="{% url 'estimate-home' %}">ESTIMATES</a>
+        {% endif %}
+      </div>
+      <div class="account-profile">
+        {% if user.is_authenticated %}
+        <ul class="navbar-nav ">
+          <li class="nav-item">
+            <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> {{ user.username }} </a>
+            <div class="dropdown-menu dropdown-menu-right dropdown-profile" aria-labelledby="userMenu" >
+              <a class="dropdown-item" href="{% url 'profile' user.pk %}">View Profile</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'account_change_password' %}">Change Password</a>
+              <div class="dropdown-divider"></div>
+              {% if request.user.is_staff %}
+              <a class="dropdown-item" href="{% url 'admin:index' %}">Accounts and Permissions</a>
+              <div class="dropdown-divider"></div>
+              {% endif %}
+              <a class="dropdown-item" href="{% url 'account_logout' %}">Logout</a>
+            </div>
+          </li>
+        </ul>
+      {% endif %}
+      </div>
+
+    </div>
+
+    <div class="main-container">
+      {% if messages %}
+      {% for message in messages %}
+      <div class="popup-message">
+        <h3>{{message}}</h3>
+      </div>
+
+      {% endfor %}
+      {% endif %}
+      {% block content %}
+
+        <div class="home-container">
+          <div class="welcome-container text-center">
+            <h1 class="welcome-company-name"><img class="wave-image" src="{% static 'images/wave.png' %}" alt="">Welcome {{user.username}}!</h1>
+            <h3>AvantGarde Technologies Salesforce Management System</h3>
+            <input class="jscolor {onFineChange:'update(this)'}" value="cc66ff">
+
+          </div>
+        </div>
+      {% endblock %}
+    </div>
+
+  </div>
+
+  <!-- JQUEERY LIBRARY -->
+  <script src="{% static 'assets/js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'assets/js/jquery-ui.js' %}"></script>
+  <script src="{% static 'assets/js/popper.min.js' %}"></script>
+  <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
+  <script src="{% static 'js/jscolor.js'%}" charset="utf-8"></script>
+  <script>
+    $(".popup-message").fadeTo(2000, 500).slideUp(500, function() {
+        $(this).slideUp(500);
+    });
+    function update(jscolor) {
+    // 'jscolor' instance can be used as a string
+      document.getElementById('header').style.backgroundColor = '#' + jscolor;
+    }
+  </script>
+
+  {% block javascript %}
+
+  {% endblock javascript%}
+
+</body>
+
+</html>

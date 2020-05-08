@@ -1,0 +1,220 @@
+{% extends "_base.html" %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/estimate/estimate_create.css' %}">
+<link rel="stylesheet" href="{% static 'css/base/button.css' %}">
+<link rel="stylesheet" href="{% static 'css/base/message.css' %}">
+{% endblock %}
+
+{% block breadcrumb_content %}
+<ol class="breadcrumb">
+    {% if perms.customers.is_superuser  %}
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+    {% else %}
+      <li class="breadcrumb-item">Home</li>
+    {% endif %}
+    <li class="breadcrumb-item"><a href="{% url 'estimate-home' %}">Estimate</a></li>
+    <li class="breadcrumb-item"><a active href="#">Add Estimate</a></li>
+</ol>
+{% endblock %}
+
+{% block content %}
+{% include "_modal.html" %}
+<div class="content-container">
+  <form method="POST">{% csrf_token %}
+
+    <div id="project-details">
+      <div class="estimate-fields">
+        <div class="estnum">
+          <img src="{% static 'images/number-sign.png' %}" alt="">{% block estimateNum %}<input type="text" name="estimateNumber" class="estimate-number textinput textInput form-control" maxlength="200" required="" id="id_estimateNumber" value={{estimateNumber}}>{% endblock %}
+        </div>
+        <div class="input-data">
+          <label for="">Project Name</label>
+          {{estimateform.projectName | as_crispy_field }}
+        </div>
+        <div class="input-data">
+          <label for="">Customer: </label>
+          {{estimateform.customer | as_crispy_field}}
+        </div>
+        <div class="input-data">
+          <label for="">Mode of Payment</label>
+          {{estimateform.modeOfPayment | as_crispy_field }}
+        </div>
+        <div class="input-data">
+          <label for="">Vat label</label>
+          {{estimateform.nonVatLabel | as_crispy_field }}
+        </div>
+        {% block status %}{% endblock %}
+        <div class="textarea-data">
+          <label for="">Quotation Notes</label>
+          {{estimateform.quotationNotes | as_crispy_field }}
+        </div>
+        <div class="textarea-data">
+          <label for="">Invoice Notes</label>
+          {{estimateform.invoiceNotes | as_crispy_field }}
+        </div>
+        <div class="textarea-data">
+          <label for="">P.O Notes</label>
+          {{estimateform.poNotes | as_crispy_field }}
+        </div>
+        <!-- <div class="textarea-data">
+          <label for="">Date submitted</label>
+          {{estimateform.completedDate | as_crispy_field }}
+        </div> -->
+      </div>
+      <div class="profit-fields">
+        <span class="profit-title"><img class="mr-2" src="{% static 'images/summary.png' %}" alt=""><h3>Estimates Summary</h3></span>
+        <div class="profit-input">
+          <label for="">Total Investment: </label>
+          {{estimateform.overallInvestment }}
+        </div>
+        <div class="profit-input">
+          <label for="">Total (Non Tax)</label>
+          {{estimateform.overallNonTax}}
+        </div>
+        <div class="profit-input">
+          <label for="">Total Tax Per Lot: </label>
+          {{estimateform.overallTaxPerLot}}
+        </div>
+        <div class="profit-input">
+          <label for="">Total With Tax Per Unit</label>
+          {{estimateform.overallWithTaxPerUnit }}
+        </div>
+        <div class="profit-input">
+          <label for="">Total With Tax</label>
+          {{estimateform.overallWithTax }}
+        </div>
+        <div class="profit-input total">
+          <label for="">Total Profit</label>
+          {{estimateform.overallProfit }}
+        </div>
+        <button type="submit" name="button" class="button create_estimate"><span>Save Estimate</span></button>
+      </div>
+    </div>
+
+
+    <div class="product-list">
+      <div class="table-heading">
+        <span class="first-span"><a class="button-add-new add-form-row"><img src="{% static 'images/addrow.png' %}" alt=""></a></span>
+        <span>Product Code</span>
+        <span>Serial No.</span>
+        <span>Description</span>
+        <span>Distributor</span>
+        <span>Price /Unit</span>
+        <span>Quantity</span>
+        <span>Markup</span>
+        <span>Delivered</span>
+        <span>Total Investment</span>
+        <span>SRP</span>
+        <span>New SRP /Unit</span>
+        <span>Total(Non Tax)</span>
+        <span>Tax /Unit</span>
+        <span>Total Tax /Lot</span>
+        <span>Total/Tax /Unit</span>
+        <span>Total/Tax</span>
+        <span>Profit</span>
+      </div>
+      {{ formset.management_form }}
+      {% for form in formset %}
+      <div class="form-row table-row">
+        <span class="first-span"><button class="mybtn remove-form-row"></button></span>
+
+        <span>{{ form.productCode | as_crispy_field }} </span>
+        <span>{{ form.serialNo | as_crispy_field }}</span>
+        <span>{{ form.description | as_crispy_field }}</span>
+        <span>{{ form.distributor | as_crispy_field }}</span>
+        <span>{{ form.pricePerUnit | as_crispy_field }}</span>
+        <span>{{ form.qty | as_crispy_field }}</span>
+        <span>{{ form.markup | as_crispy_field }} </span>
+        <span>{{ form.delivered | as_crispy_field }} </span>
+        <span class="no-pointer">{{ form.totalInvestment | as_crispy_field }}</span>
+        <span class="no-pointer">{{ form.srp | as_crispy_field }}</span>
+        <span class="no-pointer">{{ form.newSRPPerUnit | as_crispy_field }}</span>
+        <span class="no-pointer">{{ form.totalNonTax | as_crispy_field }}</span>
+        <span class="no-pointer">{{ form.taxPerUnit | as_crispy_field }}</span>
+        <span class="no-pointer">{{ form.totalTaxPerLot | as_crispy_field }}</span>
+        <span class="no-pointer">{{ form.totalWithTaxPerUnit | as_crispy_field }}</span>
+        <span class="no-pointer">{{ form.totalWithTax | as_crispy_field }}</span>
+        <span class="no-pointer">{{ form.profit | as_crispy_field }}</span>
+
+      </div>
+      <span>{{form.id}}</span>
+      {% endfor %}
+    </div>
+
+  </form>
+</div>
+{% endblock %}
+{% block javascript %}
+<script>
+</script>
+
+
+<script src="{% static 'js/estimate/add_delete_row.js' %}" charset="utf-8"></script>
+<script src="{% static 'js/estimate/quantity_computation.js' %}" charset="utf-8"></script>
+
+<!-- FILL OUT FIELDS UPON SELECTING PRODUCT CODE-->
+<script>
+  $(".product-code").change(function() {
+
+    var selectID = $(this).attr("id");
+    var formNumber = 0;
+
+
+    if ($.isNumeric(selectID.slice(8, 10))) { formNumber = selectID.slice(8, 10);}
+    else { formNumber = selectID.slice(8, 9); }
+    resetProductDetails(formNumber);
+    resetCalculatedValue(formNumber);
+    recalculateOverall();
+
+    var productCode = $("#" + selectID + " option:selected").text();
+    var defaultValue = $("#" + selectID +" option:first").text();
+    resetProductDetails(formNumber);
+    var isExisting = false;
+    var myId;
+    $(".product-code").each(function() {
+      myId = $(this).attr("id");
+      var existing = $("#" + myId + " option:selected").text();
+      if (existing == productCode && myId != selectID){
+        isExisting = true;
+        $("#" + selectID).val($("#" + selectID +" option:first").val());
+        return false;
+
+      }
+    });
+
+    if(isExisting == false && productCode != defaultValue){
+        $.ajax({
+          url: '{% url "validate_productCode" %}',
+          data: {
+            'productCode': productCode
+          },
+          dataType: 'json',
+          success: function(data) {
+            if (data.is_taken) {
+              $("#id_form-" + formNumber + "-description").val(data.description);
+              $("#id_form-" + formNumber + "-serialNo").val(data.serialNo);
+              $("#id_form-" + formNumber + "-pricePerUnit").val(data.priceperunit);
+              $("#id_form-" + formNumber + "-srp").val(data.srp);
+              $("#id_form-" + formNumber + "-distributor").val(data.distributorID);
+            }
+          }
+        });
+    }
+    else{
+      if(productCode == defaultValue){
+        resetProductDetails(formNumber);
+        resetCalculatedValue(formNumber);
+        recalculateOverall();
+      }
+      else{
+        alert("You've already selected this item.")
+        $("#" + myId).focus();
+      }
+    }
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "_base.html" %}
+{% load staticfiles %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/apps/apps_create_update.css' %}">
+{% endblock %}
+
+{% block breadcrumb_content %}
+<ol class="breadcrumb">
+    {% if perms.customers.is_superuser  %}
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+    {% else %}
+      <li class="breadcrumb-item">Home</li>
+    {% endif %}
+    <li class="breadcrumb-item"><a href="{% url 'customer-home' %}">Customer</a></li>
+    <li class="breadcrumb-item"><a active href="#">Delete Customer</a></li>
+</ol>
+{% endblock %}
+
+{% block content %}
+
+<div class="content-container">
+  <form action="" method="POST">{%csrf_token%}
+    <h3>Delete the following Customer?</h3>
+    <ul>
+    {% for cust in delCustomers %}
+      <li class=" mt-2"><span class="mr-2">&cross;</span>{{ cust }}</li>
+    {% endfor %}
+    </ul>
+    <button type="submit" name="button" class="button button-delete"><span>Confirm Delete</span></button>
+    <a class="ml-3" href="{% url 'customer-home' %}">No, Cancel</a>
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends "_base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/apps/apps_create_update.css' %}">
+<link rel="stylesheet" href="{% static 'css/base/button.css' %}">
+<link rel="stylesheet" href="{% static 'css/base/message.css' %}">
+{% endblock %}
+
+{% block breadcrumb_content %}
+<ol class="breadcrumb">
+    {% if perms.customers.is_superuser  %}
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+    {% else %}
+      <li class="breadcrumb-item">Home</li>
+    {% endif %}
+    <li class="breadcrumb-item"><a href="{% url 'product-home' %}">Product</a></li>
+    <li class="breadcrumb-item"><a active href="#">Add Product</a></li>
+</ol>
+{% endblock %}
+
+{% block content %}
+{% include "_modal.html" %}
+<div class="content-container">
+	<form method='POST' enctype="multipart/form-data" novalidate id="product-form">{% csrf_token %}
+		{{form.productCode | as_crispy_field}}
+		{{form.serialNo | as_crispy_field }}
+		{{form.category | as_crispy_field }}
+		<div class="category-field">
+			<a href="{% url 'category_create' %}" id="add_category" onclick="return showAddPopup(this);"><img src="{% static 'images/category-add.png' %}"></a>
+			<a id="edit_category"><img src="{% static 'images/category-edit.png' %}"></a>
+			<a id="delete_category"><img src="{% static 'images/batch_delete.png' %}" class="mr-3" alt=""></a>
+		</div>
+		{{form.distributor | as_crispy_field }}
+		{{form.description | as_crispy_field }}
+		{{form.pricePerUnit | as_crispy_field }}
+		{{form.srp | as_crispy_field }}
+		<button type="submit" name="button" class="button"><span>Submit</span></button>
+	</form>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+
+<script type="text/javascript">
+	var kaliwa = (screen.width - 300) / 2;
+	var taas = (screen.height - 300) / 2;
+
+	function showEditPopup(url) {
+		var win = window.open(url, "Edit", 'height=300, width=300,top=' + taas + ',left=' + kaliwa + '');
+		return false;
+	}
+
+	function showDeletePopup(url) {
+		var win = window.open(url, "Delete", 'height=300, width=300,top=' + taas + ',left=' + kaliwa + '');
+		return false;
+	}
+
+	function showAddPopup(triggeringLink) {
+		var name = triggeringLink.id.replace(/^add_/, '');
+		href = triggeringLink.href;
+		var win = window.open(href, name, 'height=300, width=300,top=' + taas + ',left=' + kaliwa + '');
+		win.focus();
+		return false;
+	}
+
+	function closeAddPopup(win, newID, newRepr, id) {
+		$(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+		win.close();
+	}
+
+	function closeEditPopup(win, newID, newRepr, oldname, id) {
+		$('#id_category option:contains(' + oldname + ')').text(newRepr);
+		win.close();
+	}
+
+	function closeDeletePopup(win, newID) {
+		$("#id_category option[value=" + newID + "]").remove();
+		win.close();
+	}
+
+	$("a.batch_delete").on("click", function() {
+		context = context.toString();
+		var url = "{% url 'distributor-delete-batch' 'test' %}";
+		url = url.replace('test', context);
+		$(this).attr("href", url);
+	});
+</script>
+
+<script>
+	$("#edit_category").click(function() {
+		category_name = $("#id_category option:selected").text();
+		var data = {
+			"category_name": category_name
+		};
+		$.ajax({
+			type: 'GET',
+			url: '/product/category/ajax/get_category_id',
+			data: data,
+			success: function(data) {
+				var url = "/product/category/" + data['category_id'] + "/edit/";
+				showEditPopup(url);
+			},
+			error: function(data) {
+				alert("No product selected.");
+			}
+		});
+	});
+
+
+	$("#delete_category").click(function() {
+		category_name = $("#id_category option:selected").text();
+		var data = {
+			"category_name": category_name
+		};
+		$.ajax({
+			type: 'GET',
+			url: '/product/category/ajax/get_category_id',
+			data: data,
+			success: function(data) {
+				var url = "/product/category/" + data['category_id'] + "/delete/";
+				showDeletePopup(url);
+			},
+			error: function(data) {
+				alert("No product selected.");
+			}
+		});
+	})
+</script>
+
+<script>
+	$('#div_id_category div').append($('div.category-field'))
+	$('#div_id_category div').css('display', 'flex')
+	$('#div_id_category div').css('align-items', 'center')
+</script>
+
+{% endblock %}

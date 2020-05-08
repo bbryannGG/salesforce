@@ -1,0 +1,217 @@
+.content-container{
+  width: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+}
+table#myTable{
+  width: 100%;
+}
+.button-plain{
+  border:none;
+  background-color: Transparent;
+  cursor: pointer;
+}
+tr:hover{
+  background-color: rgba(240,240,240,0.7);
+  transition: 0.3s;
+}
+td.input-td{
+  display: flex;
+  justify-content: center;
+}
+#myTable_paginate{
+  margin-top: 15px;
+  font-size: 1.1rem;
+}
+#myTable_length{
+  font-size: 1.1rem;
+}
+/* CUSTOMER RIGHT CLICK MENU */
+.custom-menu {
+    display: none;
+    z-index: 1000;
+    position: absolute;
+    overflow: hidden;
+    border: 1px solid #CCC;
+    white-space: nowrap;
+    font-family: sans-serif;
+    background: #FFF;
+    color: #333;
+    border-radius: 5px;
+    padding: 0;
+}
+
+/* Each of the items in the list */
+.custom-menu li {
+    padding: 8px 12px;
+    cursor: pointer;
+    list-style-type: none;
+    transition: all .3s ease;
+    user-select: none;
+}
+
+.custom-menu li:hover {
+    background-color: #DEF;
+}
+
+
+
+/* BUTTON ACTIONS */
+div.option-list{
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(150,150,150,0.3);
+  display: flex;
+  justify-content: space-between;
+}
+div.option-list a{
+  color:white;
+  margin: 0 5px;
+  display: inline-block;
+}
+
+div.option-left{
+}
+a#filter{
+  background-color: Transparent;
+  border: 1px solid rgba(200,200,200,0.8);
+  cursor: pointer;
+}
+div.filter-group{
+  box-shadow: 1px 1px 10px rgba(50,50,50, 0.3);
+  background-color: white;
+  padding: 15px 20px;
+  position: absolute;
+  z-index: 111;
+  display: none;
+}
+div.filter-container{
+  display: flex;
+}
+.filter-div{
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+.filter-div label{
+  margin-right: 5px;
+}
+div.select-category{
+  margin-right: 20px;
+}
+select{
+  margin-left: 10px;
+}
+div.option-right{
+  /* margin-right: 10px; */
+}
+div.option-right a{
+  color:black;
+}
+.crud{
+  background-color: pink;
+  font-size: 0.9rem;
+  padding: 7px 10px;
+}
+div.option-right a.crud{
+  color:white;5
+}
+button.crud{
+  border:none;
+}
+
+a.delete-all{
+  background-color: rgba(255,89,100,1);
+}
+
+a.delete-all:hover{
+  background-color: rgba(255,89,100,0.8);
+  transition: 0.3s;
+}
+
+a.export-all{
+  background-color: #45B69C;
+}
+
+a.export-all:hover{
+  background-color: rgba(88,198,99,0.8);
+  transition: 0.3s;
+}
+a.add-item{
+  background-color: rgb(53,167,255,1);
+}
+a.add-item:hover{
+  background-color: rgba(53,167,255,0.8);
+  transition: 0.3s;
+}
+
+button.actions{
+  background-color: rgba(114,147,160,1);
+  color:white;
+  font-size: 1rem;
+  cursor:pointer;
+}
+
+button.actions:hover{
+  background-color: rgba(114,147,160,0.8);
+}
+a.estimate-link{
+  color: #4a4646;
+}
+
+#myTable th{
+  font-weight: 700;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+
+
+
+/* READ VIEW */
+div.modal-body{
+  padding: 20px 40px;
+}
+div.modal-header{
+  background-color: rgba(150,150,150,0.1);
+  color: black;
+}
+div.modal-title{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+span.read-name{
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+span.read-email{
+  display: block;
+  font-size: 0.95rem;
+}
+span.title{
+  display: block;
+  font-size: 1rem;
+  color: rgba(150,150,150,1);
+}
+span.data{
+  display: block;
+  font-size: 1.1rem;
+  color:black;
+}
+div.modal-content{
+  width: 450px;
+  margin-left: 100px;
+}
+div.modal-dual{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(200,200,200,0.4);
+}
+div.modal-single{
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(200,200,200,0.4);
+}

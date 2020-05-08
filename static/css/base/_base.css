@@ -1,0 +1,124 @@
+html{
+  font-size: 62.5%;
+  font-family: 'Open Sans', sans-serif;
+}
+body {
+  background-color: white;
+}
+
+
+/* MAIN HEADER */
+.main-header {
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  background-color: #417690;
+  width: 100%;
+  height: 4rem;
+  box-shadow: 3px 3px 5px rgba(180, 180, 180, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  color: #fff;
+}
+.navbutton{
+  color:white;
+  margin: 0 1rem;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+.navbutton:hover{
+  color: rgb(220,220,220);
+}
+.navbutton:active{
+  font-size: 1.1rem;
+}
+
+
+.account-profile #userMenu,
+.company-name a,
+.company-name a:hover{
+  color: rgb(200,200,200);
+}
+
+a.dropdown-item {
+  font-size: 0.9rem;
+}
+
+/* Breadcrumb */
+.breadcrumb-nav{
+  position: fixed;
+  top:4rem;
+  width: 100%;
+  z-index: 1;
+  height: 2.8rem;
+}
+
+/* MAIN CONTAINER */
+div.main-container {
+  background-color: white;
+  margin-top: 7rem;
+  padding: 1rem 2rem;
+  z-index: -1;
+  color: rgba(74, 70, 70, 1);
+}
+
+div.home-container{
+  height: 80vh;
+  width: 800px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+div.home-container h1{
+  text-align: center;
+}
+.wave-image{
+  animation: rotateImage 1s ease-out 2;
+  animation-delay: 1s;
+}
+.welcome-container{
+  animation: moveDown 1s ease-out;
+
+}
+/* Popup Message */
+div.popup-message {
+  background-color: #61dfa0;
+  color: #2e9961;
+  margin-bottom: 5px;
+  text-align: center;
+  padding: 10px 0;
+}
+div.popup-message h3 {
+  font-size: 1rem;
+}
+
+/* Animation */
+
+@keyframes rotateImage{
+  0%{
+    transform: rotateZ();
+  }
+  50%{
+    transform: rotateZ(60deg);
+  }
+  100%{
+    transform: rotate(0);
+  }
+}
+
+@keyframes moveDown{
+  0%{
+    opacity: 0%;
+    transform: translateY(-10rem);
+  }
+  60%{
+    transform: translateY(5rem);
+  }
+  100%{
+    opacity: 100%;
+    transform: translate(0);
+  }
+}

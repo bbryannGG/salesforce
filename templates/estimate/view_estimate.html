@@ -1,0 +1,647 @@
+{% extends "_base.html" %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/estimate/estimate_view.css' %}">
+<link rel="stylesheet" href="{% static 'css/base/button.css' %}">
+<script src="{% static 'js/jspdf.min.js' %}" charset="utf-8"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script> -->
+
+<script src="{% static 'js/jspdf.plugin.autotable.min.js' %}" charset="utf-8"></script>
+{% endblock %}
+
+{% block breadcrumb_content %}
+<ol class="breadcrumb">
+    {% if perms.customers.is_superuser  %}
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+    {% else %}
+      <li class="breadcrumb-item">Home</li>
+    {% endif %}
+    <li class="breadcrumb-item"><a href="{% url 'estimate-home' %}">Estimate</a></li>
+    <li class="breadcrumb-item"><a active href="#">View Estimate</a></li>
+</ol>
+{% endblock %}
+
+{% block content %}
+{% include "_modal.html" %}
+<div class="content-container">
+  <div class="top-container">
+    <div class="project-info">
+      <div class="estimate-header">
+        <img src="{% static 'images/number-sign.png' %}" alt="">
+        <p>{{ estimate.estimateNumber }}</p>
+      </div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-secondary drop dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="{% url 'estimate-update' estimate.pk %}">Edit</a>
+          <a class="dropdown-item" href="{% url 'estimate-duplicate' estimate.pk %}">Duplicate</a>
+          <a class="dropdown-item" href="{% url 'estimate-delete-batch' estimate.pk %}">Delete</a>
+        </div>
+      </div>
+    </div>
+    <div class="project-action">
+      <ul class="navbar-nav ml-auto estimate">
+        <li class="nav-item">
+          <a class="nav-link dropdown-toggle action" href="#" id="actionMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Quotation</a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="actionMenu">
+            <a class="dropdown-item" id="view-quotation">View</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" id="print-quotation">Print</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" id="download-quotation">Download PDF</a>
+          </div>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto estimate">
+        <li class="nav-item">
+          <a class="nav-link dropdown-toggle action" href="#" id="actionMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Invoice</a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="actionMenu">
+            <a class="dropdown-item" id="view-invoice">View</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" id="print-invoice">Print</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" id="download-invoice">Download PDF</a>
+          </div>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto estimate">
+        <li class="nav-item">
+          <a class="nav-link dropdown-toggle action" href="#" id="actionMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">P.O</a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="actionMenu">
+            <a class="dropdown-item" id="view-po">View</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" id="print-po">Print</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" id="download-po">Download PDF</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="estimate-fields">
+    <div class="estimate-information">
+      <h3 class="information-title"><img src="{% static 'images/information.png' %}" alt=""> Estimate Information</h3>
+
+      <div class="estimate-row">
+        <div class="estimate-1">
+          <p><span class="title">Project Name: </span> <span class="data">{{estimate.projectName}}</span></p>
+          <p><span class="title">Customer: </span> <span class="data">{{estimate.customer}}</span></p>
+          <p><span class="title">No. of Payment: </span> <span class="data">{{estimate.modeOfPayment}}</span></p>
+          <p><span class="title ">Status: </span> <span class="data status">{{estimate.status}}</span></p>
+          <p><span class="title">Non Vat Label: </span> <span class="data">{{estimate.nonVatLabel}}</span></p>
+        </div>
+        <div class="estimate-2">
+          <p><span class="title">Invoice Notes: </span> <span class="data">{{estimate.quotationNotes | linebreaksbr}}</span></p>
+          <p><span class="title">Quotation Notes: </span> <span class="data">{{estimate.invoiceNotes | linebreaksbr}}</span></p>
+          <p><span class="title">P.O Notes: </span> <span class="data">{{estimate.poNotes | linebreaksbr}}</span></p>
+          <p><span class="title">Completed Date: </span> <span class="data">{{estimate.completedDate}}</span></p>
+        </div>
+        <div class="estimate-3">
+          <p><span class="title">Created At: </span> <span class="data">{{estimate.created_at}}</span></p>
+          <p><span class="title">Created By: </span> <span class="data">{{estimate.created_by}}</span></p>
+          <p><span class="title">Last Updated At: </span> <span class="data">{{estimate.last_updated_at}}</span></p>
+          <p><span class="title">Last Updated By: </span> <span class="data">{{estimate.last_updated_by}}</span></p>
+        </div>
+      </div>
+    </div>
+    <div class="overall-information">
+      <h3 class="information-title"><img src="{% static 'images/transaction.png' %}" alt=""> Transaction Summary</h3>
+      <p><span class="overall-title">Total Investment:</span><span class="overallInvestment">{{estimate.overallInvestment}}</span></p>
+      <p><span class="overall-title">Total (Non-Tax):</span><span class="overallNonTax">{{estimate.overallNonTax}}</span></p>
+      <p><span class="overall-title">Total Tax Per Lot:</span><span class="overallTaxperLot">{{estimate.overallTaxPerLot}}</span></p>
+      <p><span class="overall-title">Total With Tax Per Unit:</span><span class="overallWithTaxPerUnit">{{estimate.overallWithTaxPerUnit}}</span></p>
+      <p><span class="overall-title">Total With Tax:</span><span class="overallWithTax">{{estimate.overallWithTax}}</span></p>
+      <p><span class="overall-title">Total Profit:</span><span class="overallProfit">{{estimate.overallProfit}}</span></p>
+    </div>
+  </div>
+  <div class="estimate-list">
+    <h3 class="information-title"><img class="mr-2" src="{% static 'images/computer.png' %}" alt="">Product List</h3>
+    <div class="table-content">
+    <table id="myTable">
+      <thead>
+        <th>Product Code</th>
+        <th>Serial No</th>
+        <th class="description">Description</th>
+        <th>Distributor</th>
+        <th>Price/Unit</th>
+        <th>Quantity</th>
+        <th>Markup</th>
+        <th>Delivered</th>
+        <th>Total Investment</th>
+        <th>SRP</th>
+        <th>New SRP /Unit</th>
+        <th>Total(Non Tax)</th>
+        <th>Tax /Unit</th>
+        <th>Total Tax /Lot</th>
+        <th>Total/Tax /Unit</th>
+        <th>Total With Tax</th>
+        <th>Profit</th>
+      </thead>
+      {% for prod in product_list %}
+      <tr>
+        <td>{{ prod.productCode }}</td>
+        <td>{{ prod.serialNo }}</td>
+        <td class="description">{{ prod.description }}</td>
+        <td>{{ prod.distributor }}</td>
+        <td><span class="priceperunit">{{ prod.pricePerUnit }}</span></td>
+        <td>{{ prod.qty }}</td>
+        <td><span class="markup">{{ prod.markup }}</span></td>
+        <td><span class="delivered">{{ prod.delivered }}</span></td>
+        <td><span class="investment">{{ prod.totalInvestment }}</span></td>
+        <td><span class="srp">{{ prod.srp }}</span></td>
+        <td><span class="srpperunit">{{ prod.newSRPPerUnit }}</span></td>
+        <td><span class="totalnontax">{{ prod.totalNonTax }}</span></td>
+        <td><span class="taxperunit">{{ prod.taxPerUnit }}</span></td>
+        <td><span class="taxperlot">{{ prod.totalTaxPerLot }}</span></td>
+        <td><span class="withtaxperunit">{{ prod.totalWithTaxPerUnit }}</span></td>
+        <td><span class="withTax">{{ prod.totalWithTax }}</span></td>
+        <td><span class="profit">{{ prod.profit }}</span></td>
+      </tr>
+      {% endfor %}
+    </table>
+    </div>
+  </div>
+
+
+</div>
+{% endblock %}
+{% block javascript %}
+<script src="{% static 'js/estimate/imageData.js' %}" charset="utf-8"></script>
+<script type="text/javascript" src="{% static 'dataTables/datatables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/apps/select.js' %}"></script>
+
+<script>
+  // GET THE DATE TODAY
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = today.getFullYear();
+
+  today = mm + '/' + dd + '/' + yyyy;
+
+$(document).ready(function(){
+
+  function quotationPDF(action, type) {
+    var doc = new jsPDF('p', 'mm', [215.9, 279.4]);
+
+    doc.setFontSize(13);
+    doc.setFontType("bold");
+    doc.text(15, 20, 'Project Name: {{estimate.projectName}}');
+
+    doc.addImage(imgData, 'JPEG', 150, 10, 50, 20)
+
+    doc.setFontSize(11);
+    doc.text(150, 47, type + ' #: ');
+    doc.text(150, 53, 'Date: ');
+    doc.setFontType("normal");
+    doc.text(178,47,'{{estimate.estimateNumber}}');
+    doc.text(178,53,today);
+
+    doc.setFontType("normal");
+    doc.text(15, 41, 'To:');
+    doc.text(15, 47, '{{estimate.customer.contactPerson}}');
+    doc.setFontType("bold");
+    doc.text(15, 53, '{{estimate.customer.companyName}}');
+    doc.setFontType("normal");
+    doc.setFontSize(10);
+    doc.text(15, 59, '{{estimate.customer.addressLine1}} {{estimate.customer.addressLine2}}');
+    doc.text(15, 65, '{{estimate.customer.city}} {{estimate.customer.postalCode}} {{estimate.customer.country}}')
+    doc.text(15, 71, '{{estimate.customer.phone}}');
+
+    // PRODUCT LIST
+    doc.autoTable({
+      head: [ ['Product Code', 'Description', 'Serial No', 'Price', 'Qty', 'Total Price'] ],
+      body: [
+        {% for prod in product_list %}
+        ['{{prod.productCode}}', '{{prod.description}}', '{{prod.serialNo}}', 'Php ' + formatter.format('{{prod.totalWithTaxPerUnit}}'), '{{prod.qty}}', 'Php ' + formatter.format('{{prod.totalWithTax}}')],
+        {% endfor %}
+
+        {% if estimate.nonVatLabel == "Yes" %}
+          [{ content: 'Grand Total (NON-VAT):', colSpan: 5}, {styles: { fontStyle: 'bold' }, content:'Php ' + formatter.format('{{estimate.overallWithTax}}')}],
+        {% else %}
+          [{ content: 'Grand Total:', colSpan: 5}, {content:'Php ' + formatter.format('{{estimate.overallWithTax}}'), style:{fontStyle:'bold'}}],
+        {% endif %}
+      ],
+      startY: 78,
+      theme: 'grid',
+      // showHead: 'firstPage',
+      columnStyles: {
+        0: { minCellWidth: 40, halign: 'center' },
+        1: { minCellWidth: 40, halign: 'center' },
+        2: { minCellWidth: 30, halign: 'center' },
+        3: { minCellWidth: 30, halign: 'center' },
+        4: { minCellWidth: 12, halign: 'center' },
+        5: { minCellWidth: 30, halign: 'center' },
+      },
+      headStyles: { halign: 'center', fillColor: '#39B0C4', textColor: 'white'},
+    });
+
+    let productY = doc.lastAutoTable.finalY;
+    let numOfPayment = {{estimate.modeOfPayment}} + 1;
+    let paymentheight = numOfPayment * 7.584;
+    let heightLeft = productY + paymentheight + 10;
+
+
+    if(heightLeft > 265){
+      doc.addPage();
+      doc.autoTable({
+        head: [ ['NOTES'] ],
+        body: [ ['{{estimate.invoiceNotes | linebreaksbr  }}'.replace(regex, "\n")] ],
+        headStyles: { fillColor: 'white', textColor:'black'},
+        tableWidth: 110,
+        pageBreak: 'avoid',
+        theme: 'plain',
+        tableLineWidth: 0.4,
+        lineColor: '#39B0C4',
+      });
+    }
+    else{
+      doc.autoTable({
+        head: [ ['Notes:'] ],
+        body: [ ['{{estimate.invoiceNotes | linebreaksbr  }}'.replace(regex, "\n")] ],
+        headStyles: { fillColor: 'white', textColor:'black'},
+        startY: productY + 10,
+        tableWidth: 110,
+        pageBreak: 'avoid',
+        theme: 'plain',
+        tableLineWidth: 0.4,
+        lineColor: '#39B0C4',
+      });
+    }
+    // NOTES SECTION
+    let notesY = doc.lastAutoTable.finalY;
+
+    if(notesY < productY){
+      modeY = 14;
+    }
+    else{
+      modeY = productY + 10;
+    }
+
+    //MODE OF PAYMENT SECTION
+    doc.autoTable({
+      head: [
+        ['   ', 'Amount', 'Due']
+      ],
+      body: [
+        {% with ''|center:estimate.modeOfPayment as range %}
+        {% for _ in range %}
+             ['','',''],
+        {% endfor %}
+        {% endwith %}
+      ],
+      headStyles: { halign: 'center', fillColor: '#39B0C4', textColor: 'white' },
+      startY: modeY,
+      tableWidth: 100,
+      theme: 'grid',
+      margin: { left: 132 },
+      pageBreak: 'auto',
+      columnStyles: { 0: {cellWidth: 20}, 1: {cellWidth: 25}, 2: {cellWidth: 25},
+      },
+    });
+
+    let paymentY = doc.lastAutoTable.finalY;
+
+    if (paymentY > notesY) {
+      finalY = paymentY;
+    } else if (paymentY == notesY) {
+      finalY = paymentY;
+    } else {
+      finalY = notesY;
+    }
+
+    var pageCount = doc.internal.getNumberOfPages();
+
+    // REGARDS section
+    if (finalY <= 196 && finalY >= 29 && pageCount == 1) {
+      // Bottom First Page
+      doc.setFontSize(11);
+      doc.text(15, 202, "Regards,");
+      doc.setFontType("bold");
+      doc.text(15, 214, "{{estimate.created_by.first_name}} {{estimate.created_by.last_name}} ");
+      doc.setFontType("normal");
+      doc.text(15, 220, "{{estimate.created_by.position}} ");
+      doc.text(15, 226, "Avantgarde Technologies");
+      doc.text(15, 232, "{{estimate.created_by.contact_number}} ");
+      doc.text(15, 238, "{{estimate.created_by.email}} ");
+
+      doc.text(125, 214, "Conform:");
+      doc.text(125, 226, "_____________________________________");
+      doc.text(125, 232, "              Customer Authorized Signatory");
+      doc.setFontType("bold");
+      doc.text(125, 238, "Will serve as Temporary PO upon signed");
+      doc.setFontType("normal");
+
+    } else if (finalY > 197 && finalY < 265) {
+      // Top Last Page
+      doc.addPage();
+      doc.text(15, 20, "Regards,");
+      doc.setFontType("bold");
+      doc.text(15, 32, "{{estimate.created_by.first_name}} {{estimate.created_by.last_name}} ");
+      doc.setFontType("normal");
+      doc.text(15, 38, "{{estimate.created_by.position}} ");
+      doc.text(15, 44, "Avantgarde Technologies");
+      doc.text(15, 50, "{{estimate.created_by.contact_number}} ");
+      doc.text(15, 56, "{{estimate.created_by.email}} ");
+
+      doc.text(125, 32, "Conform:");
+      doc.text(125, 44, "______________________________________");
+      doc.text(125, 50, "              Customer Authorized Signatory");
+      doc.setFontType("bold");
+      doc.text(125, 56, "Will serve as Temporary PO upon signed");
+      doc.setFontType("normal");
+    } else if (finalY <= 196 && finalY >= 29 && pageCount > 1) {
+      // Bottom Last Page
+      doc.text(15, 202, "Regards,");
+      doc.setFontType("bold");
+      doc.text(15, 214, "{{estimate.created_by.first_name}} {{estimate.created_by.last_name}} ");
+      doc.setFontType("normal");
+      doc.text(15, 220, "{{estimate.created_by.position}} ");
+      doc.text(15, 226, "Avantgarde Technologies");
+      doc.text(15, 232, "{{estimate.created_by.contact_number}} ");
+      doc.text(15, 238, "{{estimate.created_by.email}} ");
+
+      doc.text(125, 214, "Conform:");
+      doc.text(125, 226, "_____________________________________");
+      doc.text(125, 232, "              Customer Authorized Signatory");
+      doc.setFontType("bold");
+      doc.text(125, 238, "Will serve as Temporary PO upon signed");
+      doc.setFontType("normal");
+    }
+
+
+    pageHeight = doc.internal.pageSize.height;
+    var pageCounts = doc.internal.getNumberOfPages();
+
+    for (i = 1; i <= pageCounts; i++) {
+      doc.setFontSize(10);
+      doc.setPage(i);
+      doc.text(198, 272, i + "/" + pageCounts);
+      doc.text(15, 272, "Address: Unit I Lennox Commercial Center Barrio Tagapo Santa Rosa City Laguna, 4026");
+    }
+
+    if(action == "print"){
+      doc.autoPrint();
+      doc.output('dataurlnewwindow');
+    }
+    else if(action == "view"){
+      doc.output('dataurlnewwindow');
+    }
+    else if(action =="download"){
+      doc.save(type + '-{{estimate.estimateNumber}}');
+    }
+
+  }
+
+  $("#view-quotation").click(function(){
+    quotationPDF('view', 'Quotation');
+  });
+  $("#print-quotation").click(function(){
+    quotationPDF('print', 'Quotation');
+  });
+  $("#download-quotation").click(function(){
+    quotationPDF('download', 'Quotation');
+  });
+
+  $("#view-invoice").click(function(){
+    quotationPDF('view', 'Invoice');
+  });
+  $("#print-invoice").click(function(){
+    quotationPDF('print', 'Invoice');
+  });
+  $("#download-invoice").click(function(){
+    quotationPDF('download', 'Invoice');
+  });
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  });
+</script>
+
+<script>
+$(document).ready(function(){
+
+  function poPDF(action){
+    {% for distri in distributor_list %}
+    var totalInvestment = 0;
+    {% for prod in product_list %}
+    {% if prod.distributor == distri %}
+    totalInvestment = totalInvestment + {{prod.totalInvestment}};
+    {% endif %}
+    {% endfor %}
+    var doc = new jsPDF('p', 'mm', [215.9, 279.4]);
+
+    doc.setFontSize(14);
+    doc.setFontType("bold");
+    doc.text(15, 20, 'PROJECT NAME: {{estimate.projectName}}');
+
+    doc.addImage(imgData, 'JPEG', 150, 10, 50, 20)
+
+    doc.setFontSize(12);
+    doc.text(163, 41, 'P.O #: {{estimate.estimateNumber}}');
+
+    doc.text(23, 47, '{{distri.distributorName}}')
+
+    doc.setFontType("normal");
+    doc.text(15, 41, 'To:')
+    doc.text(23, 41, '{{distri.contactPerson}}')
+    doc.setFontSize(11);
+    doc.text(23, 53, '{{distri.addressLine1}}')
+    doc.text(23, 59, '{{distri.addressLine2}}')
+    doc.text(23, 65, '{{distri.city}} {{distri.postalCode}}')
+    doc.text(23, 71, '{{distri.country}}');
+    doc.text(23, 77, '{{distri.phone}}');
+
+    // PRODUCT LIST
+    doc.autoTable({
+      head: [ ['Product Code', 'Description', 'Serial No', 'Price', 'Qty', 'Total Price'] ],
+      body: [
+        {% for prod in product_list %}
+        {% if prod.distributor == distri %}
+
+        ['{{prod.productCode}}', '{{prod.description}}', '{{prod.serialNo}}', 'Php ' + formatter.format('{{prod.pricePerUnit}}'), '{{prod.qty}}', 'Php ' + formatter.format('{{prod.totalInvestment}}')],
+
+        {% endif %}
+        {% endfor %}
+
+        [{ content: 'Grand Total:', colSpan: 5}, {content:'Php ' + formatter.format(totalInvestment), styles:{fontStyle:'bold'}}],
+      ],
+      startY: 85,
+      theme: 'grid',
+      // showHead: 'firstPage',
+      columnStyles: {
+        0: { minCellWidth: 40, halign: 'center' },
+        1: { minCellWidth: 40, halign: 'center' },
+        2: { minCellWidth: 30, halign: 'center' },
+        3: { minCellWidth: 30, halign: 'center' },
+        4: { minCellWidth: 12, halign: 'center' },
+        5: { minCellWidth: 30, halign: 'center' },
+      },
+      headStyles: { halign: 'center',  fillColor: '#39B0C4', textColor: 'white' },
+    });
+
+    productY = doc.lastAutoTable.finalY;
+    numOfPayment = {{estimate.modeOfPayment}} + 1;
+    paymentheight = numOfPayment * 7.584;
+    heightLeft = productY + paymentheight + 10;
+
+
+    if(heightLeft > 265){
+      doc.addPage();
+      doc.autoTable({
+        head: [ ['NOTES'] ],
+        body: [ ['{{estimate.poNotes | linebreaksbr  }}'.replace(regex, "\n")] ],
+        headStyles: { },
+        tableWidth: 110,
+        pageBreak: 'avoid',
+        theme: 'plain',
+        tableLineWidth: 0.5,
+      });
+    }
+    else{
+      doc.autoTable({
+        head: [ ['NOTES'] ],
+        body: [ ['{{estimate.poNotes | linebreaksbr  }}'.replace(regex, "\n")] ],
+        headStyles: {  },
+        startY: productY + 10,
+        tableWidth: 110,
+        pageBreak: 'avoid',
+        theme: 'plain',
+        tableLineWidth: 0.5,
+      });
+    }
+    // NOTES SECTION
+     notesY = doc.lastAutoTable.finalY;
+
+    if(notesY < productY){
+      modeY = 14;
+    }
+    else{
+      modeY = productY + 10;
+    }
+
+    //MODE OF PAYMENT SECTION
+    doc.autoTable({
+      head: [
+        ['   ', 'Amount', 'Due']
+      ],
+      body: [
+        {% with ''|center:estimate.modeOfPayment as range %}
+        {% for _ in range %}
+             ['','',''],
+        {% endfor %}
+        {% endwith %}
+      ],
+      headStyles: { halign: 'center', fillColor: '#39B0C4', textColor: 'white' },
+      startY: modeY,
+      tableWidth: 100,
+      theme: 'grid',
+      margin: { left: 132 },
+      pageBreak: 'auto',
+      columnStyles: {
+        0: {cellWidth: 20},
+        1: {cellWidth: 25},
+        2: {cellWidth: 25},
+      },
+    });
+
+     paymentY = doc.lastAutoTable.finalY;
+
+    if (paymentY > notesY) {
+      finalY = paymentY;
+    } else if (paymentY == notesY) {
+      finalY = paymentY;
+    } else {
+      finalY = notesY;
+    }
+
+    var pageCount = doc.internal.getNumberOfPages();
+
+    // REGARDS section
+    if (finalY <= 196 && finalY >= 29 && pageCount == 1) {
+      // Bottom First Page
+      doc.text(15, 202, "Regards,");
+      doc.setFontType("bold");
+      doc.text(15, 214, "{{estimate.created_by.first_name}} {{estimate.created_by.last_name}} ");
+      doc.setFontType("normal");
+      doc.text(15, 220, "{{estimate.created_by.position}} ");
+      doc.text(15, 226, "Avantgarde Technologies");
+      doc.text(15, 232, "{{estimate.created_by.contact_number}} ");
+      doc.text(15, 238, "{{estimate.created_by.email}} ");
+
+      doc.text(125, 214, "Conform:");
+      doc.text(125, 226, "_____________________________________");
+      doc.text(125, 232, "              Customer Authorized Signatory");
+
+    } else if (finalY > 197 && finalY < 265) {
+      // Top Last Page
+      doc.addPage();
+      doc.text(15, 20, "Regards,");
+      doc.setFontType("bold");
+      doc.text(15, 32, "{{estimate.created_by.first_name}} {{estimate.created_by.last_name}} ");
+      doc.setFontType("normal");
+      doc.text(15, 38, "{{estimate.created_by.position}} ");
+      doc.text(15, 44, "Avantgarde Technologies");
+      doc.text(15, 50, "{{estimate.created_by.contact_number}} ");
+      doc.text(15, 56, "{{estimate.created_by.email}} ");
+
+      doc.text(125, 32, "Conform:");
+      doc.text(125, 44, "______________________________________");
+      doc.text(125, 50, "              Customer Authorized Signatory");
+
+    } else if (finalY <= 196 && finalY >= 29 && pageCount > 1) {
+      // Bottom Last Page
+      doc.text(15, 202, "Regards,");
+      doc.setFontType("bold");
+      doc.text(15, 214, "{{estimate.created_by.first_name}} {{estimate.created_by.last_name}} ");
+      doc.setFontType("normal");
+      doc.text(15, 220, "{{estimate.created_by.position}} ");
+      doc.text(15, 226, "Avantgarde Technologies");
+      doc.text(15, 232, "{{estimate.created_by.contact_number}} ");
+      doc.text(15, 238, "{{estimate.created_by.email}} ");
+
+      doc.text(125, 214, "Conform:");
+      doc.text(125, 226, "_____________________________________");
+      doc.text(125, 232, "              Customer Authorized Signatory");
+    }
+
+
+    pageHeight = doc.internal.pageSize.height;
+    var pageCounts = doc.internal.getNumberOfPages();
+
+    for (i = 1; i <= pageCounts; i++) {
+      doc.setFontSize(10);
+      doc.setPage(i);
+      doc.text(198, 272, i + "/" + pageCounts);
+      doc.text(15, 272, "Address: Unit I Lennox Commercial Center Barrio Tagapo Santa Rosa City Laguna, 4026");
+    }
+
+    if(action == "print"){
+      doc.autoPrint();
+      doc.output('dataurlnewwindow');
+    }
+    else if(action == "view"){
+      doc.output('dataurlnewwindow');
+    }
+    else if(action =="download"){
+      doc.save('P.O-{{estimate.estimateNumber}}.pdf');
+    }
+    {% endfor %}
+  }
+
+  $("#view-po").click(function(){
+    poPDF('view');
+  });
+  $("#print-po").click(function(){
+    poPDF('print');
+  });
+  $("#download-po").click(function(){
+    poPDF('download');
+  });
+});
+</script>
+
+{% endblock %}

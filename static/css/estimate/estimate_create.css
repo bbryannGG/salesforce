@@ -1,0 +1,155 @@
+.content-container{
+  color: rgba(74, 70, 70, 1);
+  max-width: 1920px;
+  margin: 0 auto;
+}
+div.estnum{
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+textarea{
+  min-width: 500px;
+  max-height: 105px;
+}
+input.estimate-number{
+  border:none;
+  font-size: 1.6rem;
+  pointer-events:none;
+  margin-left: 5px;
+}
+div#project-details{
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+div.estimate-fields{
+    max-width: 500px;
+}
+div.profit-fields{
+  margin: 50px 30px 0 0;
+  border: 1px solid rgba(200,200,200,1);
+  padding: 25px 30px;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.3);
+}
+span.profit-title{
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(200,200,200,1);
+}
+div.profit-input{
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+}
+div.profit-input label{
+  width: 150px;
+}
+input.overall{
+  text-align: right;
+  border:none;
+  background-color: Transparent;
+  pointer-events:none;
+  width: 150px;
+}
+
+button.create_estimate{
+  width: 100%;
+  border-top: 1px solid rgba(200,200,200,1);
+}
+
+div.total, input.profit{
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+/* PRODUCT LIST TABLE */
+div.product-list{
+  overflow-x: scroll;
+  margin-top: 50px;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.3);
+}
+/* TABLE HEADING */
+div.table-heading{
+  display: flex;
+  width: 2595px;
+  font-weight: 700;
+  font-size: 1.2rem;
+  padding: 10px 0;
+  background-color:  rgba(230,230,230,1);
+  border: 1px solid rgba(200,200,200,1);
+
+}
+div.table-heading span.first-span{
+  width: 40px;
+  border:none;
+}
+div.table-heading span {
+  display: block;
+  width: 150px;
+  text-align: center;
+}
+/* TABLE ROW */
+div.table-row{
+  display: flex;
+  width: 2595px;
+  /* background-color: pink; */
+}
+div.table-row span{
+  display: block;
+  width: 150px;
+}
+div.table-row span.first-span{
+  width: 45px;
+  border:none;
+}
+button.remove-form-row{
+  width: 35px;
+}
+div.table-row span.first-span{ /* delete button */
+  /* padding-left: 7px;
+  padding-top: 10px; */
+}
+div.table-row input,  div.table-row select{
+  margin-left: 5px;
+  margin-top: 10px;
+  width: 140px;
+  font-size: 0.9rem;
+  height: 40px;
+  text-align: center;
+}
+div.table-row select{
+  margin-top: 12px;
+}
+button.mybtn{
+  margin-top: 10px;
+  margin-left: 5px;
+  background-color: Transparent;
+  border:none;
+  outline:none;
+  cursor: pointer;
+}
+button.remove-form-row{
+  background-image: url('/static/images/trash-estimate.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: none;
+  height: 40px;
+}
+a.button-add-new{
+  cursor:pointer;
+}
+span.no-pointer input{
+  pointer-events: none;
+}
+
+
+
+/* BOTTOM FIELDS */
+div.bottom-fields{
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+/* TOTAL PROFIT */

@@ -1,0 +1,16 @@
+{% extends "product/product_create.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+
+{% block breadcrumb_content %}
+<ol class="breadcrumb">
+    {% if perms.customers.is_superuser  %}
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+    {% else %}
+      <li class="breadcrumb-item">Home</li>
+    {% endif %}
+    <li class="breadcrumb-item"><a href="{% url 'product-home' %}">Product</a></li>
+    <li class="breadcrumb-item"><a active href="#">Update Product</a></li>
+</ol>
+{% endblock %}

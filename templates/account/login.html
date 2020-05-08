@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+<html>
+
+<head>
+	<title>AvantGarde Salesforce</title>
+	<link rel="stylesheet" href="{% static 'css/base/css-reset.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/base/button.css' %}">
+	<link rel="stylesheet" href="{% static 'css/accounts/login.css' %}">
+	<link href="https://fonts.googleapis.com/css?family=Nunito:400,700&display=swap" rel="stylesheet">
+	{% block extra_head %}
+	{% endblock %}
+</head>
+
+<body>
+	{% if messages %}
+	{% for message in messages %}
+	<div class="popup-message">
+		<h3>{{message}}</h3>
+	</div>
+	{% endfor %}
+	{% endif %}
+	<div class="content-container">
+			<div class="image-container">
+				<h2 class="image-heading">Welcome!</h2>
+				<h2 class="image-heading">Sales Force Management System</h2>
+			</div>
+			<div class="login-box">
+				{% block form_content %}
+				<div class="company-logo">
+						<img src="{% static 'images/logo-150.png' %}" alt="">
+				</div>
+				{% block content %}
+				<form method="POST">{% csrf_token %}
+					<legend class="title-heading">Login</legend>
+					<fieldset class="form-content">
+						{{ form | crispy }}
+					</fieldset>
+					<div class="forgot-password">
+						<button type="submit" class="button"><span>Login</span></button>
+						<a href="{% url 'account_reset_password' %}">Forgot Password?</a>
+					</div>
+				</form>
+				<div class="bottom-section">
+					<p class="blurr-text">Does not have an account yet? <a href="{% url 'account_signup' %}">Sign Up</a></p>
+				</div>
+				{% endblock %}
+				{% endblock %}
+		</div>
+	</div>
+	<script src="{% static 'assets/js/jquery-3.2.1.min.js' %}"></script>
+	<script src="{% static 'assets/js/popper.min.js' %}"></script>
+	<script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+	<script>
+		$(".popup-message").fadeTo(2000, 500).slideUp(500, function(){
+			$(".popup-message").slideUp(500);
+		});
+	</script>
+</body>
+
+</html>

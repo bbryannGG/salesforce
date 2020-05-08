@@ -1,0 +1,41 @@
+/* BUTTON DESIGN */
+.button {
+  background-color: rgba(24,133,242,1);
+  border-radius: 2px;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 1rem;
+  padding: 1rem 2rem;
+  transition: all 0.5s;
+  cursor: pointer;
+}
+
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button span:after {
+  content: '\02713';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -2rem;
+  transition: 0.5s;
+}
+
+.button:hover span {
+  padding-right: 2.5rem;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+.button-delete{
+  background-color: rgba(255, 59, 61, 1)
+}

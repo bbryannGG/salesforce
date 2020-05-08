@@ -1,0 +1,231 @@
+{% extends "_base.html" %}
+{% load staticfiles %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/apps/dashboard.css' %}">
+{% endblock %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+{% include "_modal.html" %}
+<div class="content-container">
+  <div class="top-dashboard">
+    <div class="topleft-dashboard">
+      <div class="total-customers single-widget">
+        <img src="{% static 'images/dashboard-customer.png' %}" alt="">
+        <p><span class="data">{{ totalCustomer }}</span> <span class="title">Customers</span></p>
+      </div>
+      <div class="border-here"></div>
+      <div class="total-distributors single-widget">
+        <img src="{% static 'images/dashboard-distributor.png' %}" alt="">
+        <p><span class="data">{{ totalDistributor }}</span> <span class="title">Distributors</span></p>
+      </div>
+      <div class="border-here"></div>
+      <div class="total-products single-widget">
+        <img src="{% static 'images/dashboard-product.png' %}" alt="">
+        <p><span class="data">{{ totalProduct }}</span> <span class="title">Products</span></p>
+      </div>
+    </div>
+    <div class="profit-chart">
+      <div class="profit-head">
+        <h3>Yearly Profit - <span class="yearlyProfit"></span></h3>
+        <div class="selection">
+          <label for="">Select Year: </label>
+          <select name="" id="year-data">
+            {% for year in yearList %}
+              <option value="{{year}}">{{year}}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <canvas id="myChart"></canvas>
+    </div>
+    <div class="topright-dashboard">
+      <div class="successful-transaction single-widget">
+        <img src="{% static 'images/dashboard-success.png' %}" alt="">
+        <p><span class="data">{{ totalSuccessful }}</span> <span class="title">Successful Transaction</span></p>
+      </div>
+      <div class="border-here"></div>
+      <div class="pending-transaction single-widget">
+        <img src="{% static 'images/dashboard-pending.png' %}" alt="">
+        <p><span class="data">{{ totalPending }}</span> <span class="title">Pending Transaction</span></p>
+      </div>
+      <div class="border-here"></div>
+      <div class="cancelled-transaction single-widget">
+        <img src="{% static 'images/dashboard-cancelled.png' %}" alt="">
+        <p><span class="data">{{ totalCancelled }}</span> <span class="title">Cancelled Transaction</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-dashboard">
+    <div class="total-profit bottom-menu">
+      <h3>Total Profit</h3>
+      <h1 class="profit-data"></h1>
+      <div class="date-range">
+        <label for="">From: </label>
+        <input class="form-control" id="in" type="text" />
+      </div>
+      <div class="date-range">
+        <label for="">To: </label>
+        <input class="form-control" id="out" type="text" />
+      </div>
+      <div id="invalid-date">
+        * Please select a valid date
+      </div>
+    </div>
+    <div class="top-products bottom-menu">
+      <h3>Top Selling Products</h3>
+      <div class="list-container">
+        {% if topSold %}
+        <table>
+          {% for prod, value in topSold.items %}
+          <tr>
+            <td>{{ prod }} </td>
+            <td class="product-sold">{{ value }} sold</td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% else %}
+        <p>No successful transactions found.</p>
+        {% endif %}
+      </div>
+
+    </div>
+    <div class="top-customer bottom-menu">
+      <h3>Top Customer</h3>
+      <div class="list-container">
+        {% if topCustomer %}
+        <table>
+          {% for cust, value in topCustomer.items %}
+          <tr>
+            <td>{{ cust }} </td>
+            <td>{{ value }} transactions</td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% else %}
+        <p>No successful transactions yet.</p>
+        {% endif %}
+      </div>
+    </div>
+    <div class="recent-transaction bottom-menu">
+      <h3>Recent Transaction</h3>
+      <div class="list-container">
+      {% if recentTransaction %}
+      <table>
+        {% for recent in recentTransaction %}
+        <tr>
+          <td>{{recent.estimateNumber}}</td>
+          <td>{{recent.customer}}</td>
+          <td>{{recent.status}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% else %}
+      <p>No transactions found.</p>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock content %}
+{% block javascript %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="{% static 'js/dashboard/setData.js' %}" charset="utf-8"></script>
+<script>
+  $('span.yearlyProfit').text('Php ' + formatter.format({{yearProfit}}));
+  $('h1.profit-data').text('Php ' + formatter.format({{profit}}));
+  var date = new Date();
+  $("#in").val('{{first_profit}}');
+  $("#out").val(formatDate(date));
+
+  var ctx = document.getElementById('myChart').getContext('2d');
+  ctx.height = 500;
+
+  var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'bar',
+    responsive: true,
+    maintainAspectRatio: false,
+    // The data for our dataset
+    data: {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+      datasets: [{
+        label: 'Profit',
+        backgroundColor: '#2274A5',
+        borderColor: 'rgb(255, 99, 132)',
+        data: [{{jan}},{{feb}},{{march}},{{april}},{{may}},{{june}},{{july}},{{aug}},{{sept}},{{oct}},{{nov}},{{dec}}]
+      }]
+    },
+
+
+    // Configuration options go here
+    options: {legend: { display: false }, responsive: true}
+  });
+</script>
+
+<script>
+  $("#year-data").change(function() {
+    var myYear = $("#year-data option:selected").text();
+
+    $.ajax({
+      url: '{% url "validate_year" %}',
+      data: {
+        'myYear': myYear
+      },
+      dataType: 'json',
+      success: function(data) {
+        chart.data.datasets[0].data.splice(0, 12);
+        chart.data.datasets[0].data.push(data.jan, data.feb, data.march, data.april, data.may, data.june, data.july, data.aug, data.sept, data.oct, data.nov, data.dec);
+        chart.update();
+      }
+    });
+  });
+
+  $("#in").datepicker({
+    dateFormat: 'yy-mm-dd',
+    minDate: new Date('{{first_profit}}'),
+    maxDate: 0,
+
+    onSelect: function(dateText, inst) {
+       var actualDate = new Date(dateText);
+       var newDate = new Date(actualDate.getFullYear(), actualDate.getMonth(), actualDate.getDate()+1);
+        $('#out').datepicker('option', 'minDate', newDate );
+    }
+  });
+
+  $("#out").datepicker({dateFormat: 'yy-mm-dd', maxDate: 0, minDate: 0});
+  $("#out").change(updateProfit);
+  $("#in").change(updateProfit);
+
+  function updateProfit(){
+
+    var to_date = $('#out').val();
+    var from_date = $('#in').val();
+
+    toValid = (isValidDate(to_date));
+    fromValid = (isValidDate(from_date));
+
+    if(toValid == true && fromValid == true){
+      $("#invalid-date").fadeOut(100);
+      $.ajax({
+        url: '{% url "validate_profit" %}',
+        data: {
+          'from_date': from_date,
+          'to_date': to_date
+        },
+        dataType: 'json',
+        success: function(data) {
+          $('div.total-profit h1').text('Php ' + formatter.format(data.total_profit));
+        }
+      });
+    }
+    else{
+      $("#invalid-date").fadeIn(100);
+    }
+
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Category</title>
+
+	<link rel="stylesheet" href="{% static 'css/base/css-reset.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/base/button.css' %}">
+	<link rel="stylesheet" href="{% static 'css/apps/category.css' %}">
+</head>
+<body>
+	<div class="content-container">
+		{% block content %}
+		<form method = 'POST' enctype = "multipart/form-data" novalidate id = "category-form">{% csrf_token %}
+			{{form | crispy}}
+			<button type="submit" name="button" class="button"><span>Submit</span></button>
+		</form>
+		{% endblock %}
+	</div>
+</body>
+</html>

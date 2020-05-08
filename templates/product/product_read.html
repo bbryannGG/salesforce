@@ -1,0 +1,79 @@
+{% load widget_tweaks %}
+{% load staticfiles %}
+<div class="modal-header">
+  <div class="modal-title">
+    <img src="{% static 'images/product-read.png' %}" class="mr-3">
+    <div class="company-detail">
+      <p><span class="read-name">{{ products.productCode }}</span> <span class="read-email">{{ products.category }}</span></p>
+     </div>
+  </div>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  {% if products %}
+  <div class="modal-dual">
+    <div>
+      <span class="title">Serial No.</span>
+      <span class="data">{{ products.serialNo }}</span>
+    </div>
+
+    <div>
+      <span class="title">Distributor</span>
+      <span class="data">{{ products.distributor }}</span>
+    </div>
+  </div>
+
+
+  <div class="modal-dual">
+    <div>
+      <span class="title">Price Per Unit</span>
+      <span class="data price-per-unit">{{ products.pricePerUnit }}</span>
+    </div>
+
+    <div>
+      <span class="title">SRP</span>
+      <span class="data srp">{{ products.srp }}</span>
+    </div>
+  </div>
+
+  <div class="modal-single">
+    <div>
+      <span class="title">Description</span>
+      <span class="data">{{ products.description }}</span>
+    </div>
+  </div>
+
+  <div class="modal-dual">
+    <div>
+      <span class="title">Date Updated</span>
+      <span class="data">{{ products.last_updated_at }}</span>
+    </div>
+
+    <div>
+      <span class="title">Updated By</span>
+      <span class="data">{{ products.last_updated_by }}</span>
+    </div>
+  </div>
+
+  <div class="modal-dual">
+    <div>
+      <span class="title">Date Added</span>
+      <span class="data">{{ products.created_at }}</span>
+    </div>
+
+    <div>
+      <span class="title">Added By</span>
+      <span class="data">{{ products.created_by }}</span>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% block javascript %}
+<script>
+  $('span.price-per-unit').text(formatter.format($('span.price-per-unit').text()));
+  $('span.srp').text(formatter.format($('span.srp').text()));
+</script>
+{% endblock %}

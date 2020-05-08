@@ -1,0 +1,143 @@
+html {
+  font-size: 62.5%;
+}
+
+body {
+  background-color: rgba(220,220,220,0.8);
+  color: black;
+}
+
+/* Containers */
+
+.content-container {
+  width: 800px;
+  height: 650px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  font-family: 'Nunito', sans-serif;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.image-container {
+  width: 400px;
+  height: 650px;
+  background-image: url("/static/images/bg.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: white;
+  display: flex;
+	text-align: center;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 5rem 1rem;
+  box-sizing: border-box;
+}
+
+/* Headings */
+.image-heading{
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.title-heading{
+  font-size: 2.5rem;
+  padding-bottom: 1rem;
+  margin: 2rem 0;
+	border-bottom: 1px solid rgba(150,150,150,0.5);
+}
+
+.login-box {
+  background-color: #fff;
+  padding: 3rem;
+  width: 400px;
+  height: 650px;
+  box-sizing: border-box;
+  font-size: 1.5rem;
+}
+
+.company-logo{
+	text-align: center;
+}
+
+/* Forms */
+
+.form-content{
+	margin: 2rem 0 1rem;
+}
+.form-control{
+  font-size: 1.4rem;
+}
+.form-group{
+  margin-bottom: 2rem;
+}
+
+/* Forgot Password */
+.forgot-password{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.forgot-password a{
+	color: black;
+}
+
+/* Bottom Section */
+.bottom-section{
+	border-top: 1px solid rgba(150,150,150,0.5);
+	padding-top: 10px;
+  margin-top: 10px;
+}
+.blurr-text{
+	color:rgba(0, 0, 0, 0.5);
+}
+.bottom-section a{
+}
+.return-login{
+  margin-top: 2rem;
+  padding-bottom: 1rem;
+  float: right;
+}
+/* Contact Us */
+.contact_us{
+	border-top: 1px solid rgba(150,150,150,0.5);
+	margin-top: 10px;
+}
+
+/* Popup Message */
+div.popup-message {
+  background-color: #61dfa0;
+  color: #2e9961;
+  text-align: center;
+  padding: 1rem 0;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+}
+
+div.popup-message h3 {
+  text-align: center;
+	font-size: 1.5rem;
+}
+
+.button{
+  font-size: 1.5rem;
+}
+/* Media Query */
+@media (max-width: 768px) {
+  .image-container {
+    display: none;
+  }
+
+  .content-container {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .login-content-container {
+    width: 400px;
+  }
+}
