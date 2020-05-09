@@ -1,6 +1,6 @@
 {% extends "product/category_form.html" %}
 {% load crispy_forms_tags %}
-{% load staticfiles %}
+{% load static %}
 {% block content %}
 <form method = 'POST' action= '' enctype = "multipart/form-data" novalidate id = "category-form">{% csrf_token %}
 	<h4>Delete the category?</h4>
